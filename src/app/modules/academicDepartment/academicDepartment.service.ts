@@ -99,8 +99,22 @@ const getDepByIdDB = async (id: string) => {
   });
   return result;
 };
+// update department
+const updateAcaDep = async (
+  id: string,
+  payload: Partial<AcademicDepartment>
+): Promise<AcademicDepartment> => {
+  const result = await prisma.academicDepartment.update({
+    where: {
+      id,
+    },
+    data: payload,
+  });
+  return result;
+};
 export const AcademicDepartmentService = {
   inserAcademicDepartment,
   getAcaDepDB,
   getDepByIdDB,
+  updateAcaDep,
 };

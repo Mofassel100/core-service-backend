@@ -19,6 +19,31 @@ const createSemester = z.object({
     }),
   }),
 });
+const UpdataAcdemicSemester = z.object({
+  body: z.object({
+    title: z
+      .string({
+        required_error: 'title is required',
+      })
+      .optional(),
+    code: z
+      .string({
+        required_error: 'code is required',
+      })
+      .optional(),
+    startMonth: z
+      .string({
+        required_error: 'startMonth is required',
+      })
+      .optional(),
+    endMonth: z
+      .string({
+        required_error: 'endMonth is required',
+      })
+      .optional(),
+  }),
+});
 export const AcademicSemesterValidation = {
   createSemester,
+  UpdataAcdemicSemester,
 };

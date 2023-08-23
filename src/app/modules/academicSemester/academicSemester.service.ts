@@ -73,8 +73,22 @@ const getSingById = async (id: string): Promise<AcademicSemester | null> => {
   });
   return result;
 };
+// update academicSemester
+const UpdateAcademicSemester = async (
+  id: string,
+  payload: Partial<AcademicSemester>
+): Promise<AcademicSemester> => {
+  const result = await prisma.academicSemester.update({
+    where: {
+      id,
+    },
+    data: payload,
+  });
+  return result;
+};
 export const academicSemesterService = {
   insertIntoDB,
   getAcaSemDB,
   getSingById,
+  UpdateAcademicSemester,
 };

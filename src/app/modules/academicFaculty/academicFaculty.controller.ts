@@ -30,7 +30,32 @@ const getAcaFaculData = catchAsync(async (req: Request, res: Response) => {
     data: result.data,
   });
 });
+// get aca fac data
+const getAcaFacByIdDB = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const result = await AcademicFacultyService.getAcaFacByIdDB(id);
+  sendResponse<AcademicFaculty>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'get Single Data',
+    data: result,
+  });
+});
+// update academic Faculty
+const updateAcaFacByIdDB = catchAsync(async (req: Request, res: Response) => {
+  const data = req.body;
+  const id = req.params.id;
+  const result = await AcademicFacultyService.updateAcaFacByIdDB(id, data);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'update academic-faculty',
+    data: result,
+  });
+});
 export const AcademicFacultyController = {
   inserAcademicFaculty,
   getAcaFaculData,
+  getAcaFacByIdDB,
+  updateAcaFacByIdDB,
 };

@@ -21,7 +21,6 @@ const insertStudent = catchAsync(async (req: Request, res: Response) => {
 const getStudentDB = catchAsync(async (req: Request, res: Response) => {
   const filters = pick(req.query, studentFilterableFields);
   const options = pick(req.query, ['page', 'limit', 'sortBy', 'sortOrder']);
-
   const result = await StudentService.getAllFromDB(filters, options);
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -31,7 +30,31 @@ const getStudentDB = catchAsync(async (req: Request, res: Response) => {
     data: result.data,
   });
 });
+const getStudentByIdDB = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const result = await StudentService.getStudentByIdDB(id);
+  sendResponse<Student>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'get single Studnet ',
+    data: result,
+  });
+});
+// Update Student
+const UpdateStudent = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const data = req.body;
+  const result = await StudentService.UpdateStudent(id, data);
+  sendResponse<Student>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Update Student Success Full',
+    data: result,
+  });
+});
 export const StudentController = {
   insertStudent,
   getStudentDB,
+  getStudentByIdDB,
+  UpdateStudent,
 };

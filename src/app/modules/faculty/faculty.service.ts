@@ -23,9 +23,7 @@ const getAllFromDB = async (
 ): Promise<IGenericResponse<Faculty[]>> => {
   const { limit, page, skip } = paginationHelpers.calculatePagination(options);
   const { searchTerm, ...filterData } = filters;
-
   const andConditions = [];
-
   if (searchTerm) {
     andConditions.push({
       OR: facultySearchableFields.map(field => ({
@@ -56,7 +54,6 @@ const getAllFromDB = async (
       }),
     });
   }
-
   const whereConditions: Prisma.FacultyWhereInput =
     andConditions.length > 0 ? { AND: andConditions } : {};
 
@@ -88,7 +85,35 @@ const getAllFromDB = async (
     data: result,
   };
 };
+//  get faculty single data
+const getFacultyByIdDB = async (id: string) => {
+  const result = await prisma.faculty.findUnique({
+    include: {
+      academicDepartment: true,
+      academicFaculty: true,
+    },
+    where: {
+      id,
+    },
+  });
+  return result;
+};
+// Update Faculty
+const UpdateFaculty = async (
+  id: string,
+  payload: Partial<Faculty>
+): Promise<Faculty> => {
+  const result = await prisma.faculty.update({
+    where: {
+      id,
+    },
+    data: payload,
+  });
+  return result;
+};
 export const FacultyService = {
   insertFaculty,
   getAllFromDB,
+  getFacultyByIdDB,
+  UpdateFaculty,
 };

@@ -30,7 +30,31 @@ const getFacultyDB = catchAsync(async (req: Request, res: Response) => {
     data: result.data,
   });
 });
+// get faculty single data
+const getFacultyByIdDB = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const result = await FacultyService.getFacultyByIdDB(id);
+  sendResponse<Faculty>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'get Faculty single data ',
+    data: result,
+  });
+});
+const UpdateFacultyByIdDB = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const data = req.body;
+  const result = await FacultyService.UpdateFaculty(id, data);
+  sendResponse<Faculty>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Update Faculty data ',
+    data: result,
+  });
+});
 export const FacultyController = {
   insertFaculty,
   getFacultyDB,
+  getFacultyByIdDB,
+  UpdateFacultyByIdDB,
 };

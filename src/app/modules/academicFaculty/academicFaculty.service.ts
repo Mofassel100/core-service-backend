@@ -66,7 +66,30 @@ const getAcaFaculData = async (
     data: result,
   };
 };
+// get single data
+const getAcaFacByIdDB = async (id: string) => {
+  const result = await prisma.academicFaculty.findUnique({
+    where: {
+      id,
+    },
+  });
+  return result;
+};
+const updateAcaFacByIdDB = async (
+  id: string,
+  payload: Partial<AcademicFaculty>
+): Promise<AcademicFaculty> => {
+  const result = await prisma.academicFaculty.update({
+    where: {
+      id,
+    },
+    data: payload,
+  });
+  return result;
+};
 export const AcademicFacultyService = {
   inserAcademicFaculty,
   getAcaFaculData,
+  getAcaFacByIdDB,
+  updateAcaFacByIdDB,
 };

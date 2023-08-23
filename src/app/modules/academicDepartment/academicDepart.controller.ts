@@ -45,8 +45,21 @@ const getDepByIdDB = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+// update Academic Department
+const updateAcaDep = catchAsync(async (req: Request, res: Response) => {
+  const data = req.body;
+  const id = req.params.id;
+  const result = await AcademicDepartmentService.updateAcaDep(id, data);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Update Academic Department Succefull',
+    data: result,
+  });
+});
 export const AcademciDepartmentController = {
   inserAcademicDepartment,
   getAcaDepDB,
   getDepByIdDB,
+  updateAcaDep,
 };
