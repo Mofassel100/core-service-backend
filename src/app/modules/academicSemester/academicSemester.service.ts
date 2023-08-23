@@ -52,7 +52,7 @@ const getAcaSemDB = async (
         ? {
             [options.sortBy]: options.sortOrder,
           }
-        : { createAt: 'desc' },
+        : { createdAt: 'desc' },
   });
   const total = await prisma.academicSemester.count();
   return {

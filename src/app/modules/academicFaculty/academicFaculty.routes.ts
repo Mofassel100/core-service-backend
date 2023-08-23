@@ -8,5 +8,6 @@ router.post(
   validateRequest(AcademicFacultyValidation.AcademicFacultyValidations),
   AcademicFacultyController.inserAcademicFaculty
 );
+router.get('/', AcademicFacultyController.getAcaFaculData);
 
 export const AcademicFacultyRoutes = router;

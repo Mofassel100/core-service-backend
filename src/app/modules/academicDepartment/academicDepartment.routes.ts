@@ -8,5 +8,6 @@ router.post(
   validateRequest(AcademicDepartmentValidation.AcademicDepartmentValid),
   AcademciDepartmentController.inserAcademicDepartment
 );
+router.get('/', AcademciDepartmentController.getAcaDepDB);
 
 export const AcademicDepartmentRouter = router;

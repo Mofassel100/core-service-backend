@@ -16,7 +16,7 @@ model AcademicSemester{
   code String
   startMonth String
   endMonth String
-  createAt DateTime @default(now())
+  createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   students Student[]
   @@map("academic_semester")
@@ -24,7 +24,7 @@ model AcademicSemester{
 model AcademicFaculty{
   id String @id @default(uuid())
   title String
-  createAt DateTime @default(now())
+  createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   students Student[]
   faculty Faculty[]
@@ -34,7 +34,7 @@ model AcademicFaculty{
 model AcademicDepartment{
   id String @id @default(uuid())
   title String
-  createAt DateTime @default(now())
+  createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   students Student[]
   facults Faculty[]
@@ -54,7 +54,7 @@ model Student{
   contactNo String
   gender String
   bloodgroup String
-  createAt DateTime @default(now())
+  createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   academicSemesterId String
   academcSemester AcademicSemester @relation(fields: [academicSemesterId],references: [id])
@@ -77,7 +77,7 @@ model Faculty{
   gender String
   bloodgroup String
   designation String
-  createAt DateTime @default(now())
+  createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   academicFacultyId String
   academicFaculty AcademicFaculty @relation(fields: [academicFacultyId],references: [id])

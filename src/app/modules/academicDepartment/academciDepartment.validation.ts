@@ -10,6 +10,7 @@ const AcademicDepartmentValid = z.object({
     }),
   }),
 });
+
 export const AcademicDepartmentValidation = {
   AcademicDepartmentValid,
 };
