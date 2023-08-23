@@ -87,7 +87,20 @@ const getAcaDepDB = async (
     data: result,
   };
 };
+// get single AcademicSingleData
+const getDepByIdDB = async (id: string) => {
+  const result = await prisma.academicDepartment.findUnique({
+    include: {
+      academicFaculty: true,
+    },
+    where: {
+      id,
+    },
+  });
+  return result;
+};
 export const AcademicDepartmentService = {
   inserAcademicDepartment,
   getAcaDepDB,
+  getDepByIdDB,
 };

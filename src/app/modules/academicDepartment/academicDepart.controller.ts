@@ -34,7 +34,19 @@ const getAcaDepDB = catchAsync(async (req: Request, res: Response) => {
     data: result.data,
   });
 });
+// get single Data
+const getDepByIdDB = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const result = await AcademicDepartmentService.getDepByIdDB(id);
+  sendResponse<AcademicDepartment>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'get Aca Dep single data',
+    data: result,
+  });
+});
 export const AcademciDepartmentController = {
   inserAcademicDepartment,
   getAcaDepDB,
+  getDepByIdDB,
 };
