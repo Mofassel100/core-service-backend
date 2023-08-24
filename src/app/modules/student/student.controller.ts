@@ -52,9 +52,21 @@ const UpdateStudent = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+
+const DeletedStudentByIdDB = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const result = await StudentService.DeletedStudentByIdDB(id);
+  sendResponse<Student>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Deleted single Studnet ',
+    data: result,
+  });
+});
 export const StudentController = {
   insertStudent,
   getStudentDB,
   getStudentByIdDB,
   UpdateStudent,
+  DeletedStudentByIdDB,
 };

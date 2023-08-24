@@ -57,9 +57,21 @@ const updateAcaDep = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+// Deleted Academic Department
+const DeletedDepByIdDB = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const result = await AcademicDepartmentService.DeletedDepByIdDB(id);
+  sendResponse<AcademicDepartment>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Deleted AcademicDepartment',
+    data: result,
+  });
+});
 export const AcademciDepartmentController = {
   inserAcademicDepartment,
   getAcaDepDB,
   getDepByIdDB,
   updateAcaDep,
+  DeletedDepByIdDB,
 };

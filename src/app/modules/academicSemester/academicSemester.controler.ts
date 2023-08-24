@@ -62,9 +62,20 @@ const UpdataAcdemicSemester = catchAsync(
     });
   }
 );
+// get single data
+const DeletedSingleData = catchAsync(async (req: Request, res: Response) => {
+  const result = await academicSemesterService.DeletedSingById(req.params.id);
+  sendResponse<AcademicSemester | null>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Deleted AcademicSemester single Data',
+    data: result,
+  });
+});
 export const academicSemesterController = {
   insertIntoDB,
   getAcaSemDB,
   getSingleData,
   UpdataAcdemicSemester,
+  DeletedSingleData,
 };

@@ -109,9 +109,24 @@ const UpdateStudent = async (
   });
   return result;
 };
+// Deleted single student data
+const DeletedStudentByIdDB = async (id: string) => {
+  const result = await prisma.student.delete({
+    where: {
+      id,
+    },
+    include: {
+      academcSemester: true,
+      academicDepartment: true,
+      academicFaculty: true,
+    },
+  });
+  return result;
+};
 export const StudentService = {
   insertStudent,
   getAllFromDB,
   getStudentByIdDB,
   UpdateStudent,
+  DeletedStudentByIdDB,
 };

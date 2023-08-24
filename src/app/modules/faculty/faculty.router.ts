@@ -9,6 +9,7 @@ router.patch(
   FacultyController.UpdateFacultyByIdDB
 );
 router.get('/:id', FacultyController.getFacultyByIdDB);
+router.delete('/:id', FacultyController.DeletedFacultyByIdDB);
 router.post(
   '/',
   validateRequest(FacultyValidation.facultyCreate),

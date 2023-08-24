@@ -9,6 +9,7 @@ router.patch(
   AcademciDepartmentController.updateAcaDep
 );
 router.get('/:id', AcademciDepartmentController.getDepByIdDB);
+router.delete('/:id', AcademciDepartmentController.DeletedDepByIdDB);
 router.post(
   '/create',
   validateRequest(AcademicDepartmentValidation.AcademicDepartmentValid),

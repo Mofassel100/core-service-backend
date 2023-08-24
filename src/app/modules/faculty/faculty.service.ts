@@ -111,9 +111,23 @@ const UpdateFaculty = async (
   });
   return result;
 };
+// Deleted Faculty
+const DeletedFacultyByIdDB = async (id: string) => {
+  const result = await prisma.faculty.delete({
+    where: {
+      id,
+    },
+    include: {
+      academicDepartment: true,
+      academicFaculty: true,
+    },
+  });
+  return result;
+};
 export const FacultyService = {
   insertFaculty,
   getAllFromDB,
   getFacultyByIdDB,
   UpdateFaculty,
+  DeletedFacultyByIdDB,
 };

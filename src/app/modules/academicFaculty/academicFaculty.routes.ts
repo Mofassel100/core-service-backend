@@ -9,6 +9,7 @@ router.patch(
   AcademicFacultyController.updateAcaFacByIdDB
 );
 router.get('/:id', AcademicFacultyController.getAcaFacByIdDB);
+router.delete('/:id', AcademicFacultyController.DeletedAcaFacByIdDB);
 router.post(
   '/create',
   validateRequest(AcademicFacultyValidation.AcademicFacultyValidations),

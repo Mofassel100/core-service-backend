@@ -9,6 +9,7 @@ routes.patch(
   academicSemesterController.UpdataAcdemicSemester
 );
 routes.get('/:id', academicSemesterController.getSingleData);
+routes.delete('/:id', academicSemesterController.DeletedSingleData);
 routes.get('/', academicSemesterController.getAcaSemDB);
 routes.post(
   '/',

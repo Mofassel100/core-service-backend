@@ -10,6 +10,7 @@ router.patch(
   StudentController.UpdateStudent
 );
 router.get('/:id', StudentController.getStudentByIdDB);
+router.delete('/:id', StudentController.DeletedStudentByIdDB);
 router.post(
   '/',
   validateRequest(StudentValidations.studentcreate),

@@ -87,9 +87,19 @@ const updateAcaFacByIdDB = async (
   });
   return result;
 };
+// Deleted AcademicFaculty
+const DeletedAcaFacByIdDB = async (id: string) => {
+  const result = await prisma.academicFaculty.delete({
+    where: {
+      id,
+    },
+  });
+  return result;
+};
 export const AcademicFacultyService = {
   inserAcademicFaculty,
   getAcaFaculData,
   getAcaFacByIdDB,
   updateAcaFacByIdDB,
+  DeletedAcaFacByIdDB,
 };

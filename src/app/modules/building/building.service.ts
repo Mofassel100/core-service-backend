@@ -1,35 +1,32 @@
-import { AcademicDepartment, Prisma } from '@prisma/client';
+import { Building, Prisma } from '@prisma/client';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import prisma from '../../../shared/prisma';
 import {
-  academicDepartmentRelationalFields,
-  academicDepartmentRelationalFieldsMapper,
-  academicDepartmentSearchableFields,
-} from './academicDepartment.contstant';
-import { IAcademicDepartmentFilterRequest } from './academicDepartment.interface';
-
-const inserAcademicDepartment = async (
-  data: AcademicDepartment
-): Promise<AcademicDepartment | null> => {
-  const result = await prisma.academicDepartment.create({
+  buildingRelationalFields,
+  buildingRelationalFieldsMapper,
+  buildingSearchableFields,
+} from './building.constant';
+import { IBuildingFilterRequest } from './building.interface';
+const inserBuilding = async (data: Building): Promise<Building | null> => {
+  const result = await prisma.building.create({
     data,
   });
   return result;
 };
 // get Aca.Dep All Data fecht
-const getAcaDepDB = async (
-  filters: IAcademicDepartmentFilterRequest,
+const getBuildingDB = async (
+  filters: IBuildingFilterRequest,
   options: IPaginationOptions
-): Promise<IGenericResponse<AcademicDepartment[]>> => {
+): Promise<IGenericResponse<Building[]>> => {
   const { limit, page, skip } = paginationHelpers.calculatePagination(options);
   const { searchTerm, ...filterData } = filters;
   const andConditions = [];
 
   if (searchTerm) {
     andConditions.push({
-      OR: academicDepartmentSearchableFields.map(field => ({
+      OR: buildingSearchableFields.map(field => ({
         [field]: {
           contains: searchTerm,
           mode: 'insensitive',
@@ -41,9 +38,9 @@ const getAcaDepDB = async (
   if (Object.keys(filterData).length > 0) {
     andConditions.push({
       AND: Object.keys(filterData).map(key => {
-        if (academicDepartmentRelationalFields.includes(key)) {
+        if (buildingRelationalFields.includes(key)) {
           return {
-            [academicDepartmentRelationalFieldsMapper[key]]: {
+            [buildingRelationalFieldsMapper[key]]: {
               id: (filterData as any)[key],
             },
           };
@@ -58,13 +55,10 @@ const getAcaDepDB = async (
     });
   }
 
-  const whereConditions: Prisma.AcademicDepartmentWhereInput =
+  const whereConditions: Prisma.BuildingWhereInput =
     andConditions.length > 0 ? { AND: andConditions } : {};
 
-  const result = await prisma.academicDepartment.findMany({
-    include: {
-      academicFaculty: true,
-    },
+  const result = await prisma.building.findMany({
     where: whereConditions,
     skip,
     take: limit,
@@ -75,7 +69,7 @@ const getAcaDepDB = async (
             createdAt: 'desc',
           },
   });
-  const total = await prisma.academicDepartment.count({
+  const total = await prisma.building.count({
     where: whereConditions,
   });
   return {
@@ -88,11 +82,8 @@ const getAcaDepDB = async (
   };
 };
 // get single AcademicSingleData
-const getDepByIdDB = async (id: string) => {
-  const result = await prisma.academicDepartment.findUnique({
-    include: {
-      academicFaculty: true,
-    },
+const getbuildingByIdDB = async (id: string) => {
+  const result = await prisma.building.findUnique({
     where: {
       id,
     },
@@ -100,11 +91,11 @@ const getDepByIdDB = async (id: string) => {
   return result;
 };
 // update department
-const updateAcaDep = async (
+const UpdateBuilding = async (
   id: string,
-  payload: Partial<AcademicDepartment>
-): Promise<AcademicDepartment> => {
-  const result = await prisma.academicDepartment.update({
+  payload: Partial<Building>
+): Promise<Building> => {
+  const result = await prisma.building.update({
     where: {
       id,
     },
@@ -113,18 +104,18 @@ const updateAcaDep = async (
   return result;
 };
 // get single AcademicSingleData
-const DeletedDepByIdDB = async (id: string) => {
-  const result = await prisma.academicDepartment.delete({
+const DeletedBuildingByIdDB = async (id: string) => {
+  const result = await prisma.building.delete({
     where: {
       id,
     },
   });
   return result;
 };
-export const AcademicDepartmentService = {
-  inserAcademicDepartment,
-  getAcaDepDB,
-  getDepByIdDB,
-  updateAcaDep,
-  DeletedDepByIdDB,
+export const BuildingService = {
+  inserBuilding,
+  UpdateBuilding,
+  getBuildingDB,
+  getbuildingByIdDB,
+  DeletedBuildingByIdDB,
 };

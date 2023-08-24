@@ -53,9 +53,21 @@ const updateAcaFacByIdDB = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+// Deleted aca fac data
+const DeletedAcaFacByIdDB = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const result = await AcademicFacultyService.DeletedAcaFacByIdDB(id);
+  sendResponse<AcademicFaculty>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Deleted AcademicFaculty',
+    data: result,
+  });
+});
 export const AcademicFacultyController = {
   inserAcademicFaculty,
   getAcaFaculData,
   getAcaFacByIdDB,
   updateAcaFacByIdDB,
+  DeletedAcaFacByIdDB,
 };

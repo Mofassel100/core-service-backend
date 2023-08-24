@@ -52,9 +52,21 @@ const UpdateFacultyByIdDB = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+// Deleted Faculty
+const DeletedFacultyByIdDB = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const result = await FacultyService.DeletedFacultyByIdDB(id);
+  sendResponse<Faculty>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Deleted Faculty single data ',
+    data: result,
+  });
+});
 export const FacultyController = {
   insertFaculty,
   getFacultyDB,
   getFacultyByIdDB,
   UpdateFacultyByIdDB,
+  DeletedFacultyByIdDB,
 };
