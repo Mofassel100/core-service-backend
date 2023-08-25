@@ -98,8 +98,8 @@ model Room {
   id String @id  @default(uuid())
   roomNumber String
   floor String
-  createdAt String
-  updatedAt String
+   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   buildingId String
   bulding Building @relation(fields: [buildingId],references: [id])
   @@map("rooms")
@@ -109,8 +109,8 @@ model Course{
   title String 
   code String
   credits Int @default(0)
-  createdAt String
-  updatedAt String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   @@map("courses")
  preRequisite CourseToPrerequisite[] @relation("courseToPreRequisite")
  preRequisiteFor CourseToPrerequisite[] @relation("preRequisiteToCourse")
