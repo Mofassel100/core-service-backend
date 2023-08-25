@@ -3,11 +3,7 @@ import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import prisma from '../../../shared/prisma';
-import {
-  buildingRelationalFields,
-  buildingRelationalFieldsMapper,
-  buildingSearchableFields,
-} from './building.constant';
+import { buildingSearchableFields } from './building.constant';
 import { IBuildingFilterRequest } from './building.interface';
 const inserBuilding = async (data: Building): Promise<Building | null> => {
   const result = await prisma.building.create({
@@ -21,9 +17,8 @@ const getBuildingDB = async (
   options: IPaginationOptions
 ): Promise<IGenericResponse<Building[]>> => {
   const { limit, page, skip } = paginationHelpers.calculatePagination(options);
-  const { searchTerm, ...filterData } = filters;
+  const { searchTerm } = filters;
   const andConditions = [];
-
   if (searchTerm) {
     andConditions.push({
       OR: buildingSearchableFields.map(field => ({
@@ -35,29 +30,8 @@ const getBuildingDB = async (
     });
   }
 
-  if (Object.keys(filterData).length > 0) {
-    andConditions.push({
-      AND: Object.keys(filterData).map(key => {
-        if (buildingRelationalFields.includes(key)) {
-          return {
-            [buildingRelationalFieldsMapper[key]]: {
-              id: (filterData as any)[key],
-            },
-          };
-        } else {
-          return {
-            [key]: {
-              equals: (filterData as any)[key],
-            },
-          };
-        }
-      }),
-    });
-  }
-
   const whereConditions: Prisma.BuildingWhereInput =
     andConditions.length > 0 ? { AND: andConditions } : {};
-
   const result = await prisma.building.findMany({
     where: whereConditions,
     skip,

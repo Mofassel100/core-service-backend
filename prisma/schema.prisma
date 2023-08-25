@@ -101,6 +101,6 @@ model Room {
   createdAt String
   updatedAt String
   buildingId String
-  rooms Building @relation(fields: [buildingId],references: [id])
+  bulding Building @relation(fields: [buildingId],references: [id])
   @@map("rooms")
 }

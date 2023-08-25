@@ -1,14 +1,3 @@
-export const buildingFilterableFields: string[] = [
-  'searchTerm',
-  'id',
-  'buildingId',
-];
+export const buildingFilterableFields: string[] = ['searchTerm'];
 
 export const buildingSearchableFields: string[] = ['title'];
-
-export const buildingRelationalFields: string[] = ['buildingId'];
-export const buildingRelationalFieldsMapper: {
-  [key: string]: string;
-} = {
-  buildingId: 'rooms',
-};
