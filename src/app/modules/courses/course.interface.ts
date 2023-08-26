@@ -6,3 +6,6 @@ export type ICoursesCreateData = {
     courseID: string;
   }[];
 };
+export type ICourseFilterRequest = {
+  searchTerm?: string | undefined;
+};
