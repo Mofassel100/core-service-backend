@@ -14,7 +14,7 @@ const create = z.object({
     preRequisiteCourses: z
       .array(
         z.object({
-          courseId: z.string({}),
+          courseID: z.string({}),
         })
       )
       .optional(),
@@ -29,7 +29,7 @@ const update = z.object({
     preRequisiteCourses: z
       .array(
         z.object({
-          courseId: z.string({}),
+          courseID: z.string({}),
           isDeleted: z.boolean({}).optional(),
         })
       )
