@@ -39,4 +39,9 @@ router.post(
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
   CourseController.assignFaculty
 );
+router.delete(
+  '/:id/remove-faculty',
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+  CourseController.RemoveFaculty
+);
 export const CourseRouter = router;

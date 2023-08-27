@@ -23,5 +23,16 @@ router.post(
   validateRequest(FacultyValidation.facultyCreate),
   FacultyController.insertFaculty
 );
+
 router.get('/', FacultyController.getFacultyDB);
+router.post(
+  '/:id/assign-courses',
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+  FacultyController.assignCourses
+);
+router.delete(
+  '/:id/remove-courses',
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+  FacultyController.RemoveCourses
+);
 export const FacultyRouter = router;

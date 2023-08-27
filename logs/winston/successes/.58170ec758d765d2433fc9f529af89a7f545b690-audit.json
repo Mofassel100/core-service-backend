@@ -184,6 +184,16 @@
             "date": 1693152164724,
             "name": "C:\\NextLavelDeveloper\\university-management-core-service-starter\\logs\\winston\\successes\\phu-2023-27-08-22-success.log",
             "hash": "a0c0d5dc441933ecb20c0f8e3c2d9732985f2cfa6fede9084bf3e587dd58b661"
+        },
+        {
+            "date": 1693156598115,
+            "name": "C:\\NextLavelDeveloper\\university-management-core-service-starter\\logs\\winston\\successes\\phu-2023-27-08-23-success.log",
+            "hash": "07c3b5aa31be3b3bf09ff25e54a0b71b3f7e01495ecf7ccfba95b117b2e670bf"
+        },
+        {
+            "date": 1693159590461,
+            "name": "C:\\NextLavelDeveloper\\university-management-core-service-starter\\logs\\winston\\successes\\phu-2023-28-08-00-success.log",
+            "hash": "aaff043d2a6af1e225bf005e8b6fa73f6a79e661b27a4988e49b1cd9346cacf4"
         }
     ],
     "hashType": "sha256"

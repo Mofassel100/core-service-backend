@@ -65,11 +65,22 @@ const deleteByIdFromDB = catchAsync(async (req: Request, res: Response) => {
 const assignFaculty = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const dataFaculty = req.body.faculties;
-  const result = await CourseService.assignFacultyId(id, dataFaculty);
+  const result = await CourseService.assignFaculty(id, dataFaculty);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Course fetched successfully',
+    data: result,
+  });
+});
+const RemoveFaculty = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const dataFaculty = req.body.faculties;
+  const result = await CourseService.RemoveFaculty(id, dataFaculty);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Remove course Faculty successfully',
     data: result,
   });
 });
@@ -81,4 +92,5 @@ export const CourseController = {
   updateOneInDB,
   deleteByIdFromDB,
   assignFaculty,
+  RemoveFaculty,
 };

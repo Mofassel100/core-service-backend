@@ -252,7 +252,7 @@ const deleteByIdFromDB = async (id: string): Promise<Course> => {
   return result;
 };
 // assignFacultyId
-const assignFacultyId = async (
+const assignFaculty = async (
   id: string,
   payload: string[]
 ): Promise<courseFaculty[]> => {
@@ -262,7 +262,7 @@ const assignFacultyId = async (
       facultyId: facultyData,
     })),
   });
-  const assingFind = await prisma.courseFaculty.findMany({
+  const RemainingFaculty = await prisma.courseFaculty.findMany({
     where: {
       courseID: id,
     },
@@ -270,7 +270,29 @@ const assignFacultyId = async (
       facuties: true,
     },
   });
-  return assingFind;
+  return RemainingFaculty;
+};
+const RemoveFaculty = async (
+  id: string,
+  payload: string[]
+): Promise<courseFaculty[]> => {
+  await prisma.courseFaculty.deleteMany({
+    where: {
+      courseID: id,
+      facultyId: {
+        in: payload,
+      },
+    },
+  });
+  const remainingFaculty = await prisma.courseFaculty.findMany({
+    where: {
+      courseID: id,
+    },
+    include: {
+      facuties: true,
+    },
+  });
+  return remainingFaculty;
 };
 
 export const CourseService = {
@@ -279,5 +301,6 @@ export const CourseService = {
   getByIdFromDB,
   deleteByIdFromDB,
   UpdateDateDB,
-  assignFacultyId,
+  RemoveFaculty,
+  assignFaculty,
 };
