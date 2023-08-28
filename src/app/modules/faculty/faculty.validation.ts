@@ -104,7 +104,15 @@ const UpdateFaculty = z.object({
       .optional(),
   }),
 });
+const assignOrRemoceCourese = z.object({
+  body: z.object({
+    courses: z.array(z.string(), {
+      required_error: 'courses is required',
+    }),
+  }),
+});
 export const FacultyValidation = {
   facultyCreate,
   UpdateFaculty,
+  assignOrRemoceCourese,
 };

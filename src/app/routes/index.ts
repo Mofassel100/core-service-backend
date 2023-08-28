@@ -1,4 +1,5 @@
 import express from 'express';
+import { SemesterRegistrationRouter } from '../modules/SemesterRegistration/semesterRegistration.routes';
 import { AcademicDepartmentRouter } from '../modules/academicDepartment/academicDepartment.routes';
 import { AcademicFacultyRoutes } from '../modules/academicFaculty/academicFaculty.routes';
 import { academictSemesterRouters } from '../modules/academicSemester/academicsemester.routes';
@@ -43,6 +44,10 @@ const moduleRoutes = [
   {
     path: '/courses',
     routes: CourseRouter,
+  },
+  {
+    path: '/semester-registration',
+    routes: SemesterRegistrationRouter,
   },
 ];
 
