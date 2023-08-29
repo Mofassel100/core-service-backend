@@ -89,15 +89,17 @@ const getAllFromDB = async (
     data: result,
   };
 };
-// // get single data
-// const getSingById = async (id: string): Promise<AcademicSemester | null> => {
-//   const result = await prisma.academicSemester.findUnique({
-//     where: {
-//       id,
-//     },
-//   });
-//   return result;
-// };
+// get single data
+const getSingById = async (
+  id: string
+): Promise<SemesterRegistration | null> => {
+  const result = await prisma.semesterRegistration.findUnique({
+    where: {
+      id,
+    },
+  });
+  return result;
+};
 // update academicSemester
 const UpdateSemesterRegistration = async (
   id: string,
@@ -142,19 +144,21 @@ const UpdateSemesterRegistration = async (
   });
   return result;
 };
-// // Deleted single data
-// const DeletedSingById = async (
-//   id: string
-// ): Promise<AcademicSemester | null> => {
-//   const result = await prisma.academicSemester.delete({
-//     where: {
-//       id,
-//     },
-//   });
-//   return result;
-// };
+// Deleted single data
+const DeletedSingById = async (
+  id: string
+): Promise<SemesterRegistration | null> => {
+  const result = await prisma.semesterRegistration.delete({
+    where: {
+      id,
+    },
+  });
+  return result;
+};
 export const SemesterRegistrationService = {
   insertIntoDb,
   UpdateSemesterRegistration,
   getAllFromDB,
+  getSingById,
+  DeletedSingById,
 };
