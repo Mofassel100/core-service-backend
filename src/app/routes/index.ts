@@ -1,4 +1,5 @@
 import express from 'express';
+import { OfferedCourseSectionRoutus } from '../modules/OfferedCourseSection/offeredCourseSection.routes';
 import { SemesterRegistrationRouter } from '../modules/SemesterRegistration/semesterRegistration.routes';
 import { AcademicDepartmentRouter } from '../modules/academicDepartment/academicDepartment.routes';
 import { AcademicFacultyRoutes } from '../modules/academicFaculty/academicFaculty.routes';
@@ -6,6 +7,7 @@ import { academictSemesterRouters } from '../modules/academicSemester/academicse
 import { BuildingRouter } from '../modules/building/building.routes';
 import { CourseRouter } from '../modules/courses/course.routes';
 import { FacultyRouter } from '../modules/faculty/faculty.router';
+import { OfferedCourseRouter } from '../modules/offeredCourse/offeredCourse.routes';
 import { RoomRouter } from '../modules/room/room.routes';
 import { StudentRooter } from '../modules/student/student.routes';
 
@@ -48,6 +50,14 @@ const moduleRoutes = [
   {
     path: '/semester-registration',
     routes: SemesterRegistrationRouter,
+  },
+  {
+    path: '/offered-course',
+    routes: OfferedCourseRouter,
+  },
+  {
+    path: '/offered-course-section',
+    routes: OfferedCourseSectionRoutus,
   },
 ];
 

@@ -1,0 +1,20 @@
+Thu Aug 31 2023 1:8:57 } [PH] error: 
+Invalid `prisma.courseToPrerequisite.create()` invocation:
+
+
+Transaction API error: Transaction already closed: Could not perform operation.
+Thu Aug 31 2023 1:9:22 } [PH] error: 
+Invalid `prisma.courseToPrerequisite.create()` invocation:
+
+
+Transaction API error: Transaction already closed: Could not perform operation.
+Thu Aug 31 2023 1:11:26 } [PH] error: 
+Invalid `prisma.courseToPrerequisite.create()` invocation:
+
+
+Transaction API error: Transaction already closed: Could not perform operation.
+Thu Aug 31 2023 1:17:54 } [PH] error: 
+Invalid `prisma.courseToPrerequisite.create()` invocation:
+
+
+Transaction API error: Transaction already closed: Could not perform operation.
