@@ -86,6 +86,7 @@ model Faculty{
   academicDepartmentId String
   academicDepartment AcademicDepartment @relation(fields: [academicDepartmentId],references: [id])
   faculties courseFaculty[]
+  offeredCourseClassSchedules OfferedCourseClassSchedule[]
   @@map("faculty")
 }
 model Building{
@@ -105,6 +106,7 @@ model Room {
   updatedAt DateTime @updatedAt
   buildingId String
   bulding Building @relation(fields: [buildingId],references: [id])
+  offeredCourseClassSchedules OfferedCourseClassSchedule[]
   @@map("rooms")
 }
 model Course{
@@ -148,12 +150,8 @@ model SemesterRegistration{
   academicsemester AcademicSemester @relation(fields: [academicSemesterId],references: [id])
   offeredCourses OfferedCourse[]
   offeredCourseSections OfferedCourseSection []
+  offeredCourseClassSchedules OfferedCourseClassSchedule[]
   @@map("semester_registration")
-}
-enum SemesterRegistrationStatus {
-  UPCOMING
-  ONGOING
-  ENDED
 }
 model OfferedCourse {
   id String @id @default(uuid())
@@ -168,6 +166,7 @@ model OfferedCourse {
   offeredCourseSections OfferedCourseSection []
   @@map("offered_course")
 }
+
 model OfferedCourseSection {
 id String @id @default(uuid())
 title String
@@ -179,6 +178,41 @@ offeredCourseId String
 offerdCourse OfferedCourse @relation(fields: [offeredCourseId],references: [id])
 semesterRegistrationId String
 semesterRegistration SemesterRegistration @relation(fields: [semesterRegistrationId],references: [id])
+offeredCourseClassSchedules OfferedCourseClassSchedule[]
 @@map("offerd_course_section")
+}
+model OfferedCourseClassSchedule {
+  id                     String               @id @default(uuid())
+  startTime              String
+  endTime                String
+  dayOfWeek              WeekDays             @default(SATURDAY)
+  createdAt              DateTime             @default(now())
+  updatedAt              DateTime             @updatedAt
+  offeredCourseSectionId String
+  offeredCourseSection   OfferedCourseSection @relation(fields: [offeredCourseSectionId], references: [id])
 
+  semesterRegistrationId String
+  semesterRegistration   SemesterRegistration @relation(fields: [semesterRegistrationId], references: [id])
+
+  roomId String
+  room   Room   @relation(fields: [roomId], references: [id])
+
+  facultyId String
+  faculty   Faculty @relation(fields: [facultyId], references: [id])
+
+  @@map("offered_course_class_schedules")
+}
+enum SemesterRegistrationStatus {
+  UPCOMING
+  ONGOING
+  ENDED
+}
+enum WeekDays {
+  SATURDAY
+  SUNDAY
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
 }
