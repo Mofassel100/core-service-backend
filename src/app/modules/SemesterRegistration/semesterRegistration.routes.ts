@@ -25,6 +25,11 @@ router.delete(
 );
 router.get('/', SemesterRegistrationController.getAllFromDB);
 router.post(
+  '/start-registration',
+  auth(ENUM_USER_ROLE.STUDENT),
+  SemesterRegistrationController.startMyRegistration
+);
+router.post(
   '/',
   validateRequest(SemesterRegistrationValidation.create),
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),

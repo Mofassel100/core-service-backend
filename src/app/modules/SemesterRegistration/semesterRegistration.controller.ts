@@ -74,10 +74,23 @@ const DeletedSingleData = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+const startMyRegistration = catchAsync(async (req: Request, res: Response) => {
+  const datas = (req as any).user?.userId;
+  console.log(datas);
+  const result = await SemesterRegistrationService.startMyRegistration(datas);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'start My Registration Data',
+    data: result,
+  });
+});
 export const SemesterRegistrationController = {
   insertIntoDB,
   UpdateSemesterRegistration,
   getAllFromDB,
   getSingleData,
   DeletedSingleData,
+  startMyRegistration,
 };

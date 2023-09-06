@@ -2,6 +2,7 @@ import {
   Prisma,
   SemesterRegistration,
   SemesterRegistrationStatus,
+  StudentSemesterRegistration,
 } from '@prisma/client';
 import httpStatus from 'http-status';
 import ApiError from '../../../errors/ApiError';
@@ -155,10 +156,74 @@ const DeletedSingById = async (
   });
   return result;
 };
+const startMyRegistration = async (
+  authUser: string
+): Promise<{
+  semesterRegistration: SemesterRegistration | null;
+  studentSemesterRegistration: StudentSemesterRegistration | null;
+}> => {
+  const studentInfo = await prisma.student.findFirst({
+    where: {
+      studentId: authUser,
+    },
+  });
+  if (!studentInfo) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Student Not found');
+  }
+  const semsterRegistrationInfo = await prisma.semesterRegistration.findFirst({
+    where: {
+      status: {
+        in: [
+          SemesterRegistrationStatus.UPCOMING,
+          SemesterRegistrationStatus.ONGOING,
+        ],
+      },
+    },
+  });
+  if (semsterRegistrationInfo?.status === SemesterRegistrationStatus.UPCOMING) {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      'Student Registration start not yet'
+    );
+  }
+
+  let studentRegistration = await prisma.studentSemesterRegistration.findFirst({
+    where: {
+      semesterRegistration: {
+        id: semsterRegistrationInfo?.id,
+      },
+      student: {
+        id: studentInfo.id,
+      },
+    },
+  });
+  if (!studentRegistration) {
+    studentRegistration = await prisma.studentSemesterRegistration.create({
+      data: {
+        semesterRegistration: {
+          connect: {
+            id: semsterRegistrationInfo?.id,
+          },
+        },
+        student: {
+          connect: {
+            id: studentInfo.id,
+          },
+        },
+      },
+    });
+  }
+
+  return {
+    semesterRegistration: semsterRegistrationInfo,
+    studentSemesterRegistration: studentRegistration,
+  };
+};
 export const SemesterRegistrationService = {
   insertIntoDb,
   UpdateSemesterRegistration,
   getAllFromDB,
   getSingById,
   DeletedSingById,
+  startMyRegistration,
 };
