@@ -35,4 +35,10 @@ router.post(
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
   SemesterRegistrationController.insertIntoDB
 );
+router.post(
+  '/enroll-into-course',
+
+  auth(ENUM_USER_ROLE.STUDENT),
+  SemesterRegistrationController.enrollIntoCourse
+);
 export const SemesterRegistrationRouter = router;
