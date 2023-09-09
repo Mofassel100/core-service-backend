@@ -37,8 +37,19 @@ router.post(
 );
 router.post(
   '/enroll-into-course',
-
+  validateRequest(SemesterRegistrationValidation.enrollOrWidrawCourse),
   auth(ENUM_USER_ROLE.STUDENT),
   SemesterRegistrationController.enrollIntoCourse
+);
+router.post(
+  '/widraw-from-course',
+  validateRequest(SemesterRegistrationValidation.enrollOrWidrawCourse),
+  auth(ENUM_USER_ROLE.STUDENT),
+  SemesterRegistrationController.WidreaFromCourse
+);
+router.post(
+  '/confirm-my-reg',
+  auth(ENUM_USER_ROLE.STUDENT),
+  SemesterRegistrationController.confirmMyRegistration
 );
 export const SemesterRegistrationRouter = router;

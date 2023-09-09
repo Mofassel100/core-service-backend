@@ -100,6 +100,35 @@ const enrollIntoCourse = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+const confirmMyRegistration = catchAsync(
+  async (req: Request, res: Response) => {
+    const user = (req as any).user;
+
+    const result = await SemesterRegistrationService.confirmMyRegistration(
+      user.userId
+    );
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'confirmMyRegistration SuccessFully',
+      data: result,
+    });
+  }
+);
+const WidreaFromCourse = catchAsync(async (req: Request, res: Response) => {
+  const user = (req as any).user;
+  const payload = req.body;
+  const result = await SemesterRegistrationService.WidreaFromCourse(
+    user.userId,
+    payload
+  );
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'widreafrom course Course SuccessFully',
+    data: result,
+  });
+});
 
 export const SemesterRegistrationController = {
   insertIntoDB,
@@ -109,4 +138,6 @@ export const SemesterRegistrationController = {
   DeletedSingleData,
   startMyRegistration,
   enrollIntoCourse,
+  WidreaFromCourse,
+  confirmMyRegistration,
 };
