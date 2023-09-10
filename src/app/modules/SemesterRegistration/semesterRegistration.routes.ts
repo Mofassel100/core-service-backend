@@ -5,7 +5,11 @@ import validateRequest from '../../middlewares/validateRequest';
 import { SemesterRegistrationController } from './semesterRegistration.controller';
 import { SemesterRegistrationValidation } from './semesterRegistration.validation';
 const router = express.Router();
-
+router.get(
+  '/get-my-registration',
+  auth(ENUM_USER_ROLE.STUDENT),
+  SemesterRegistrationController.getMyRegistration
+);
 router.patch(
   '/:id',
   validateRequest(SemesterRegistrationValidation.update),

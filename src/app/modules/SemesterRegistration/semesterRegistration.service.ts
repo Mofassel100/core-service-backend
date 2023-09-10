@@ -242,7 +242,9 @@ const WidreaFromCourse = async (
     payload
   );
 };
-const confirmMyRegistration = async (authUser: string) => {
+const confirmMyRegistration = async (
+  authUser: string
+): Promise<{ message: string }> => {
   const semesterRegistration = await prisma.semesterRegistration.findFirst({
     where: {
       status: SemesterRegistrationStatus.ONGOING,
@@ -259,7 +261,70 @@ const confirmMyRegistration = async (authUser: string) => {
         },
       },
     });
+  if (studentSemesterRegistration?.totalCreditsTaken === 0) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'student not any enroll course');
+  }
+  if (
+    studentSemesterRegistration?.totalCreditsTaken &&
+    semesterRegistration?.maxCredit &&
+    semesterRegistration.minCredit &&
+    (studentSemesterRegistration.totalCreditsTaken <
+      semesterRegistration.minCredit ||
+      studentSemesterRegistration.totalCreditsTaken >
+        semesterRegistration.maxCredit)
+  ) {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      `You are take ${semesterRegistration.minCredit} to ${semesterRegistration.maxCredit} credites`
+    );
+  }
+  await prisma.studentSemesterRegistration.update({
+    where: {
+      id: studentSemesterRegistration?.id,
+    },
+    data: {
+      isConfirmed: true,
+    },
+  });
+  return {
+    message: 'Registration is confirms',
+  };
   console.log(studentSemesterRegistration, semesterRegistration);
+};
+const getMyRegistration = async (authUser: string) => {
+  const semesterRegistration = await prisma.semesterRegistration.findFirst({
+    where: {
+      status: SemesterRegistrationStatus.ONGOING,
+    },
+    include: {
+      academicsemester: true,
+      offeredCourseClassSchedules: true,
+      offeredCourses: true,
+      offeredCourseSections: true,
+      studentSemesterRegistrationCourses: true,
+      studentSemesterRegistrations: true,
+    },
+  });
+  const studentSemesterRegistration =
+    await prisma.studentSemesterRegistration.findFirst({
+      where: {
+        semesterRegistration: {
+          id: semesterRegistration?.id,
+        },
+        student: {
+          studentId: authUser,
+        },
+      },
+      include: {
+        student: true,
+        semesterRegistration: true,
+      },
+    });
+
+  return {
+    semesterRegistration,
+    studentSemesterRegistration,
+  };
 };
 export const SemesterRegistrationService = {
   insertIntoDb,
@@ -271,4 +336,5 @@ export const SemesterRegistrationService = {
   enrollIntoCourse,
   WidreaFromCourse,
   confirmMyRegistration,
+  getMyRegistration,
 };
