@@ -14,7 +14,8 @@ import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import prisma from '../../../shared/prisma';
 import { asyncForEach } from '../../../shared/utilities';
-import { StudentSemesterPayment } from '../studentSemesterPyment/studentSemesterPayment';
+import { StudentEnrolledCourseMarkService } from '../studentEnrolledCourseMark/StudentEnrolledCourseMark.service';
+import { StudentSemesterPayment } from '../studentSemesterPyment/studentSemesterPaymentServices';
 import { studentSemesterRegistrationCourseService } from '../studentSemesterRegistrationCourse/studentSemesterRegistrationCourseService';
 import {
   ISRegistrationCourseEnrooll,
@@ -442,9 +443,18 @@ const startNewRegistration = async (
                 courseId: item.offeredCourse.courseID,
                 academicSemesterId: semesterRegistration.academicSemesterId,
               };
-              await prisma.studentEnrolledCourse.create({
-                data: StudentEnrollData,
-              });
+              const studentEnrolledCourseData =
+                await prisma.studentEnrolledCourse.create({
+                  data: StudentEnrollData,
+                });
+              await StudentEnrolledCourseMarkService.createEnrolledCourseMark(
+                prismaTratinsactionClient,
+                {
+                  studentId: item.studentId,
+                  studentEnrolledCourseId: studentEnrolledCourseData.id,
+                  academicSemesterId: semesterRegistration.academicSemesterId,
+                }
+              );
             }
           }
         );
