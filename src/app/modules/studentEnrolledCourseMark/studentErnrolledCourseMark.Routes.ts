@@ -2,6 +2,7 @@ import express from 'express';
 import { ENUM_USER_ROLE } from '../../../enums/user';
 import auth from '../../middlewares/auth';
 import { StudentEnrolledCourseMarkConroller } from './studentEnrooledCourseMark.controller';
+
 const router = express.Router();
 
 router.get(
