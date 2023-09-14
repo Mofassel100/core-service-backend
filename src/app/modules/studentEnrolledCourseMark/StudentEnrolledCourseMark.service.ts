@@ -14,6 +14,7 @@ import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import prisma from '../../../shared/prisma';
 import { IStudentEnrolledCourseMarkFilterRequest } from './studentEnrolledCourseMark.interfacel';
+import { studentEnrolledCourseMarkUtilis } from './studentEnrolledCourseMarkUtilis';
 
 const createEnrolledCourseMark = async (
   prismaClient: Omit<
@@ -142,7 +143,7 @@ const getAllFromDB = async (
   };
 };
 
-const updateStudentMarks = async (payload: any) => {
+const updateStudentMidtermMarks = async (payload: any) => {
   const { studentId, academicSemesterId, courseId, examType, marks } = payload;
   const studentEnrolledCourseMark =
     await prisma.studentEnrolledCourseMark.findFirst({
@@ -167,33 +168,95 @@ const updateStudentMarks = async (payload: any) => {
       'student Enrolled Course Mark not found'
     );
   }
-  let grade = '';
-  if (marks >= 0 && marks <= 39) {
-    grade = 'F';
-  } else if (marks >= 40 && marks <= 49) {
-    grade = 'D';
-  } else if (marks >= 50 && marks <= 59) {
-    grade = 'C';
-  } else if (marks >= 60 && marks <= 69) {
-    grade = 'B';
-  } else if (marks >= 70 && marks <= 79) {
-    grade = 'A';
-  } else if (marks >= 80 && marks <= 100) {
-    grade = 'A+';
-  }
+  const result = studentEnrolledCourseMarkUtilis.getGradeupdateMarks(marks);
   const updatGrate = await prisma.studentEnrolledCourseMark.updateMany({
     where: {
       id: studentEnrolledCourseMark.id,
     },
     data: {
-      grade,
+      grade: result.grade,
       marks,
     },
   });
   return updatGrate;
 };
+const updateStudentFinalMarks = async (payload: any) => {
+  console.log(payload);
+  const studentEnrolledCourse = await prisma.studentEnrolledCourse.findFirst({
+    where: {
+      student: {
+        id: payload.studentId,
+      },
+      academicSemester: {
+        id: payload.academicSemesterId,
+      },
+      course: {
+        id: payload.courseId,
+      },
+    },
+  });
+  if (!studentEnrolledCourse) {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      'studentEnrolledCourse not found'
+    );
+  }
+  const studentEnrolledCourseMark =
+    await prisma.studentEnrolledCourseMark.findMany({
+      where: {
+        student: {
+          id: payload.studentId,
+        },
+        academicSemester: {
+          id: payload.academicSemesterId,
+        },
+        studentEnrolledCourse: {
+          course: {
+            id: payload.courseId,
+          },
+        },
+      },
+    });
+  if (!studentEnrolledCourseMark.length) {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      'Student enroll course mark not found'
+    );
+  }
+  const midtermMark =
+    studentEnrolledCourseMark.find(item => item.examType === ExamType.MIDTERM)
+      ?.marks || 0;
+  const finalMark =
+    studentEnrolledCourseMark.find(item => item.examType === ExamType.FINAL)
+      ?.marks || 0;
+
+  const totalFinalMark =
+    Math.ceil(midtermMark * 0.4) + Math.ceil(finalMark * 0.6);
+  const result =
+    studentEnrolledCourseMarkUtilis.getGradeupdateMarks(totalFinalMark);
+  await prisma.studentEnrolledCourse.updateMany({
+    where: {
+      student: {
+        id: payload.studentId,
+      },
+      academicSemester: {
+        id: payload.academicSemesterId,
+      },
+      course: {
+        id: payload.courseId,
+      },
+    },
+    data: {
+      grade: result.grade,
+      point: result.point,
+      totalMarks: totalFinalMark,
+    },
+  });
+  console.log(result);
+};
 export const StudentEnrolledCourseMarkService = {
   createEnrolledCourseMark,
   getAllFromDB,
-  updateStudentMarks,
+  updateStudentMidtermMarks,
+  updateStudentFinalMarks,
 };
