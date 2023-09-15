@@ -1,4 +1,5 @@
 import express from 'express';
+import { OfferedCourseSectionRoutus } from '../modules/OfferedCourseSection/offeredCourseSection.routes';
 import { SemesterRegistrationRouter } from '../modules/SemesterRegistration/semesterRegistration.routes';
 import { AcademicDepartmentRouter } from '../modules/academicDepartment/academicDepartment.routes';
 import { AcademicFacultyRoutes } from '../modules/academicFaculty/academicFaculty.routes';
@@ -60,7 +61,7 @@ const moduleRoutes = [
   },
   {
     path: '/offered-course-section',
-    routes: OfferedCourseClassScheduleRoutes,
+    routes: OfferedCourseSectionRoutus,
   },
   {
     path: '/offered-course-class-schedule',

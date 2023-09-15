@@ -7,7 +7,7 @@ import { OfferedCourseSectionValidation } from './offeredCourseSection.validatio
 const router = express.Router();
 router.post(
   '/',
-  validateRequest(OfferedCourseSectionValidation.create),
+
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
   OfferedCourseSectionController.insertIntoDB
 );
