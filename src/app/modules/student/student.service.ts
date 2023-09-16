@@ -123,10 +123,41 @@ const DeletedStudentByIdDB = async (id: string) => {
   });
   return result;
 };
+const myCourse = async (
+  authUser: string,
+  filter: {
+    courseId?: string | undefined;
+    academicSemesterId?: string | undefined;
+  }
+) => {
+  if (!filter.academicSemesterId) {
+    const currentSemester = await prisma.academicSemester.findFirst({
+      where: {
+        isCurrent: true,
+      },
+    });
+    filter.academicSemesterId = currentSemester?.id;
+  }
+
+  const result = await prisma.studentEnrolledCourse.findMany({
+    where: {
+      student: {
+        studentId: authUser,
+      },
+      ...filter,
+    },
+    include: {
+      course: true,
+      academicSemester: true,
+    },
+  });
+  return result;
+};
 export const StudentService = {
   insertStudent,
   getAllFromDB,
   getStudentByIdDB,
   UpdateStudent,
   DeletedStudentByIdDB,
+  myCourse,
 };

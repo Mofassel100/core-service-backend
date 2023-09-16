@@ -12,10 +12,13 @@ import {
   offeredCourseSectionRelationalFieldsMapper,
   offeredCourseSectionSearchableFields,
 } from './offeredCourseSection.constant';
-import { IOfferedCourseSectionFilterRequest } from './offeredCourseSection.interface';
+import {
+  IOfferedCourseSection,
+  IOfferedCourseSectionFilterRequest,
+} from './offeredCourseSection.interface';
 
 const insertIntoDB = async (
-  payload: any
+  payload: IOfferedCourseSection
 ): Promise<OfferedCourseSection | null> => {
   const { classSchedules, ...data } = payload;
   console.log(classSchedules, data);
@@ -25,7 +28,7 @@ const insertIntoDB = async (
   if (!isExistOffCouData) {
     throw new ApiError(httpStatus.OK, 'offeredCourseID does not exist');
   }
-  payload.semesterRegistrationId = isExistOffCouData.semesterRegistrationId;
+
   await asyncForEach(classSchedules, async (schedule: any) => {
     await OfferedCourseClassScheduleUtils.checkFacultyAvailable(schedule);
     await OfferedCourseClassScheduleUtils.checkRoomAvailable(schedule);

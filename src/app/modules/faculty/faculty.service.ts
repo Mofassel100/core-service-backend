@@ -167,6 +167,31 @@ const RemoveCourses = async (
   });
   return remainingCourses;
 };
+
+const myCourse = async (authUser: string) => {
+  console.log(authUser);
+  // if (!filter.academicSemesterId) {
+  //   const currentSemester = await prisma.academicSemester.findFirst({
+  //     where: {
+  //       isCurrent: true,
+  //     },
+  //   });
+  //   filter.academicSemesterId = currentSemester?.id;
+  // }
+
+  // const result = await prisma.studentEnrolledCourse.findMany({
+  //   where: {
+  //     student: {
+  //       studentId: authUser,
+  //     },
+  //     ...filter,
+  //   },
+  //   include: {
+  //     course: true,
+  //     academicSemester: true,
+  //   },
+  // });
+};
 export const FacultyService = {
   insertFaculty,
   getAllFromDB,
@@ -175,4 +200,5 @@ export const FacultyService = {
   DeletedFacultyByIdDB,
   assignCourses,
   RemoveCourses,
+  myCourse,
 };
