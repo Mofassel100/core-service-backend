@@ -10,6 +10,16 @@ router.get(
   auth(ENUM_USER_ROLE.STUDENT),
   StudentController.myCourse
 );
+router.get(
+  '/student-academic-info',
+  auth(ENUM_USER_ROLE.STUDENT),
+  StudentController.getMyStudentAccInfo
+);
+router.get(
+  '/get-my-course-schedule',
+  auth(ENUM_USER_ROLE.STUDENT),
+  StudentController.getMyCourseSchedules
+);
 router.patch(
   '/:id',
   auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN),

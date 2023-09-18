@@ -168,17 +168,85 @@ const RemoveCourses = async (
   return remainingCourses;
 };
 
-const myCourse = async (authUser: string) => {
-  console.log(authUser);
-  // if (!filter.academicSemesterId) {
-  //   const currentSemester = await prisma.academicSemester.findFirst({
-  //     where: {
-  //       isCurrent: true,
-  //     },
-  //   });
-  //   filter.academicSemesterId = currentSemester?.id;
-  // }
+const myCourse = async (
+  authUser: string,
+  filter: {
+    courseId?: string | null | undefined;
+    academicSemesterId?: string | null | undefined;
+  }
+) => {
+  if (!filter.academicSemesterId) {
+    const currentSemester = await prisma.academicSemester.findFirst({
+      where: {
+        isCurrent: true,
+      },
+    });
+    filter.academicSemesterId = currentSemester?.id;
+  }
+  const offeredCourseSection = await prisma.offeredCourseSection.findMany({
+    where: {
+      offeredCourseClassSchedules: {
+        some: {
+          faculty: {
+            facultyId: authUser,
+          },
+        },
+      },
+      offerdCourse: {
+        semesterRegistration: {
+          academicsemester: {
+            id: filter.academicSemesterId,
+          },
+        },
+      },
+    },
+    include: {
+      offeredCourseClassSchedules: {
+        include: {
+          faculty: true,
+          room: {
+            include: {
+              bulding: true,
+            },
+          },
+        },
+      },
+      offerdCourse: {
+        include: { course: true },
+      },
+    },
+  });
 
+  const courseAndSchedule = offeredCourseSection.reduce(
+    (acc: any, obj: any) => {
+      const course = obj.offerdCourse.course;
+      const classSchedules = obj.offeredCourseClassSchedules;
+      const existingCourse = acc.find(
+        (item: any) => item.courese?.id === course?.id
+      );
+      if (existingCourse) {
+        existingCourse.sections.push({
+          section: obj,
+          classSchedules,
+        });
+      } else {
+        acc.push({
+          course,
+          sections: [
+            {
+              section: obj,
+              classSchedules,
+            },
+          ],
+        });
+      }
+      return acc;
+      console.log(existingCourse);
+    },
+
+    []
+  );
+  return courseAndSchedule;
   // const result = await prisma.studentEnrolledCourse.findMany({
   //   where: {
   //     student: {

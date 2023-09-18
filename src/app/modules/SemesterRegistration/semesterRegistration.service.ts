@@ -4,6 +4,7 @@ import {
   Prisma,
   SemesterRegistration,
   SemesterRegistrationStatus,
+  StudentEnrolledCourseStatus,
   StudentSemesterRegistration,
   StudentSemesterRegistrationCourse,
 } from '@prisma/client';
@@ -15,12 +16,14 @@ import { IPaginationOptions } from '../../../interfaces/pagination';
 import prisma from '../../../shared/prisma';
 import { asyncForEach } from '../../../shared/utilities';
 import { StudentEnrolledCourseMarkService } from '../studentEnrolledCourseMark/StudentEnrolledCourseMark.service';
-import { StudentSemesterPayment } from '../studentSemesterPyment/studentSemesterPaymentServices';
+
+import { StudentSemesterPaymentServices } from '../studentSemesterPyment/studentSemesterPaymentServices';
 import { studentSemesterRegistrationCourseService } from '../studentSemesterRegistrationCourse/studentSemesterRegistrationCourseService';
 import {
   ISRegistrationCourseEnrooll,
   ISemesterRegistrationFilterRequest,
 } from './semesterRegistration.interface';
+import { semesterRegistrationUtilis } from './semesterRegistrationUtilities';
 import { semesterRegistrationSearchableFields } from './semesterRegitration.constants';
 
 const insertIntoDb = async (
@@ -390,7 +393,7 @@ const startNewRegistration = async (
         if (studentSemRes.totalCreditsTaken) {
           const totalPaymentAmount = studentSemRes.totalCreditsTaken * 5000;
           console.log(totalPaymentAmount);
-          await StudentSemesterPayment.createSemesterPayment(
+          await StudentSemesterPaymentServices.createSemesterPayment(
             prismaTratinsactionClient,
             {
               studentId: studentSemRes.studentId,
@@ -466,6 +469,94 @@ const startNewRegistration = async (
     message: 'student New Semester Registratin  successfully',
   };
 };
+const getMySemesterRegCourse = async (authUserId: string) => {
+  const student = await prisma.student.findFirst({
+    where: {
+      studentId: authUserId,
+    },
+  });
+  const semesterRegistration = await prisma.semesterRegistration.findFirst({
+    where: {
+      status: {
+        in: [
+          SemesterRegistrationStatus.UPCOMING,
+          SemesterRegistrationStatus.ONGOING,
+        ],
+      },
+    },
+  });
+  if (!semesterRegistration) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'no Semester Not found');
+  }
+  const studentCompletCorese = await prisma.studentEnrolledCourse.findMany({
+    where: {
+      status: StudentEnrolledCourseStatus.COMPLETED,
+      student: {
+        id: student?.id,
+      },
+    },
+    include: {
+      course: true,
+    },
+  });
+  const studentCurrentSemesterTakenCourse =
+    await prisma.studentSemesterRegistrationCourse.findMany({
+      where: {
+        student: {
+          id: student?.id,
+        },
+        semesterRegistration: {
+          id: semesterRegistration.id,
+        },
+      },
+      include: {
+        offeredCourse: true,
+        offeredCourseSection: true,
+      },
+    });
+  const offeredCourse = await prisma.offeredCourse.findMany({
+    where: {
+      semesterRegistration: {
+        id: semesterRegistration.id,
+      },
+      academicDepartment: {
+        id: student?.academicDepartmentId,
+      },
+    },
+    include: {
+      course: {
+        include: {
+          preRequisite: {
+            include: {
+              preRequisite: true,
+            },
+          },
+        },
+      },
+      offeredCourseSections: {
+        include: {
+          offeredCourseClassSchedules: {
+            include: {
+              room: {
+                include: {
+                  bulding: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+
+  const avalaibleCourse = semesterRegistrationUtilis.getAvailableCourse(
+    offeredCourse,
+    studentCompletCorese,
+    studentCurrentSemesterTakenCourse
+  );
+  // console.log(avalaibleCourse);
+  return avalaibleCourse;
+};
 export const SemesterRegistrationService = {
   insertIntoDb,
   UpdateSemesterRegistration,
@@ -478,4 +569,5 @@ export const SemesterRegistrationService = {
   confirmMyRegistration,
   getMyRegistration,
   startNewRegistration,
+  getMySemesterRegCourse,
 };

@@ -5,6 +5,11 @@ import validateRequest from '../../middlewares/validateRequest';
 import { SemesterRegistrationController } from './semesterRegistration.controller';
 import { SemesterRegistrationValidation } from './semesterRegistration.validation';
 const router = express.Router();
+router.get(
+  '/my-semester-course',
+  auth(ENUM_USER_ROLE.STUDENT),
+  SemesterRegistrationController.getMySemesterRegCourse
+);
 router.post(
   '/:id/start-new-registration',
 
