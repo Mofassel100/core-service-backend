@@ -1,17 +1,33 @@
 import { AcademicSemester, Prisma } from '@prisma/client';
+import httpStatus from 'http-status';
+import ApiError from '../../../errors/ApiError';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import prisma from '../../../shared/prisma';
+import { RedisClinet } from '../../../shared/redis';
 import { AFilterSerchTerm } from './academciSemester.interface';
-import { AcademicFilterSerceProperty } from './academicSemester.contanst';
+import {
+  AcademicFilterSerceProperty,
+  AcademicSemesterTitleCodeMapper,
+  EVENT_ACADEMIC_SEMESTER_CREATED,
+} from './academicSemester.contanst';
 
 const insertIntoDB = async (
   data: AcademicSemester
 ): Promise<AcademicSemester> => {
+  if (AcademicSemesterTitleCodeMapper[data.title] !== data.code) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid semester Code');
+  }
   const result = await prisma.academicSemester.create({
     data,
   });
+  if (result) {
+    RedisClinet.publish(
+      EVENT_ACADEMIC_SEMESTER_CREATED,
+      JSON.stringify(result)
+    );
+  }
   return result;
 };
 const getAcaSemDB = async (
