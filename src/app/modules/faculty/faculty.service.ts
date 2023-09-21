@@ -3,7 +3,9 @@ import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import prisma from '../../../shared/prisma';
+import { RedisClinet } from '../../../shared/redis';
 import {
+  EVENT_FACULTY_CREATED,
   facultyRelationalFields,
   facultyRelationalFieldsMapper,
   facultySearchableFields,
@@ -14,6 +16,9 @@ const insertFaculty = async (data: Faculty): Promise<Faculty> => {
   const result = await prisma.faculty.create({
     data,
   });
+  if (result) {
+    RedisClinet.publish(EVENT_FACULTY_CREATED, JSON.stringify(result));
+  }
   return result;
 };
 // get all faculty

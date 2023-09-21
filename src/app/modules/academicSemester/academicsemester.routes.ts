@@ -8,7 +8,7 @@ const routes = express.Router();
 routes.patch(
   '/:id',
   auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN),
-  validateRequest(AcademicSemesterValidation.UpdataAcdemicSemester),
+  validateRequest(AcademicSemesterValidation.UpdateAcademicSemesterZodSchema),
   academicSemesterController.UpdataAcdemicSemester
 );
 routes.get('/:id', academicSemesterController.getSingleData);
@@ -20,6 +20,7 @@ routes.delete(
 routes.get('/', academicSemesterController.getAcaSemDB);
 routes.post(
   '/',
+  validateRequest(AcademicSemesterValidation.createAcademicSemesterZodSchema),
   auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN),
   academicSemesterController.insertIntoDB
 );

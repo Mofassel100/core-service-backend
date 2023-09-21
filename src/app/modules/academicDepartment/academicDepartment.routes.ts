@@ -19,8 +19,8 @@ router.delete(
 );
 router.post(
   '/create',
-  auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN),
   validateRequest(AcademicDepartmentValidation.AcademicDepartmentValid),
+  auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN),
   AcademciDepartmentController.inserAcademicDepartment
 );
 router.get('/', AcademciDepartmentController.getAcaDepDB);

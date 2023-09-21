@@ -11,6 +11,10 @@ import {
   AcademicFilterSerceProperty,
   AcademicSemesterTitleCodeMapper,
   EVENT_ACADEMIC_SEMESTER_CREATED,
+  EVENT_ACADEMIC_SEMESTER_GET_ALL,
+  EVENT_ACADEMIC_SEMESTER_GET_DELETED,
+  EVENT_ACADEMIC_SEMESTER_GET_SINGLE,
+  EVENT_ACADEMIC_SEMESTER_UPDATED,
 } from './academicSemester.contanst';
 
 const insertIntoDB = async (
@@ -71,6 +75,13 @@ const getAcaSemDB = async (
         : { createdAt: 'desc' },
   });
   const total = await prisma.academicSemester.count();
+
+  if (result) {
+    RedisClinet.publish(
+      EVENT_ACADEMIC_SEMESTER_GET_ALL,
+      JSON.stringify(result)
+    );
+  }
   return {
     meta: {
       page,
@@ -87,6 +98,13 @@ const getSingById = async (id: string): Promise<AcademicSemester | null> => {
       id,
     },
   });
+
+  if (result) {
+    RedisClinet.publish(
+      EVENT_ACADEMIC_SEMESTER_GET_SINGLE,
+      JSON.stringify(result)
+    );
+  }
   return result;
 };
 // update academicSemester
@@ -100,6 +118,12 @@ const UpdateAcademicSemester = async (
     },
     data: payload,
   });
+  if (result) {
+    RedisClinet.publish(
+      EVENT_ACADEMIC_SEMESTER_UPDATED,
+      JSON.stringify(result)
+    );
+  }
   return result;
 };
 // Deleted single data
@@ -111,6 +135,13 @@ const DeletedSingById = async (
       id,
     },
   });
+
+  if (result) {
+    RedisClinet.publish(
+      EVENT_ACADEMIC_SEMESTER_GET_DELETED,
+      JSON.stringify(result)
+    );
+  }
   return result;
 };
 export const academicSemesterService = {

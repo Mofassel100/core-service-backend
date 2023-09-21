@@ -3,7 +3,15 @@ import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import prisma from '../../../shared/prisma';
-import { academicFacultySearchableFields } from './academicFaculty.contstant';
+import { RedisClinet } from '../../../shared/redis';
+import {
+  EVENT_ACADEMIC_FACULTY_CREATED,
+  EVENT_ACADEMIC_FACULTY_GET_ALL,
+  EVENT_ACADEMIC_FACULTY_GET_DELETED,
+  EVENT_ACADEMIC_FACULTY_GET_SINGLE,
+  EVENT_ACADEMIC_FACULTY_UPDATED,
+  academicFacultySearchableFields,
+} from './academicFaculty.contstant';
 import { IAcademicFacultyFilterRequest } from './academicFaculty.interface';
 
 const inserAcademicFaculty = async (
@@ -12,6 +20,9 @@ const inserAcademicFaculty = async (
   const result = await prisma.academicFaculty.create({
     data,
   });
+  if (result) {
+    RedisClinet.publish(EVENT_ACADEMIC_FACULTY_CREATED, JSON.stringify(result));
+  }
   return result;
 };
 // get AcademicFaculty All Data feach
@@ -57,6 +68,9 @@ const getAcaFaculData = async (
   const total = await prisma.academicFaculty.count({
     where: whereConditions,
   });
+  if (result) {
+    RedisClinet.publish(EVENT_ACADEMIC_FACULTY_GET_ALL, JSON.stringify(result));
+  }
   return {
     meta: {
       total,
@@ -73,6 +87,12 @@ const getAcaFacByIdDB = async (id: string) => {
       id,
     },
   });
+  if (result) {
+    RedisClinet.publish(
+      EVENT_ACADEMIC_FACULTY_GET_SINGLE,
+      JSON.stringify(result)
+    );
+  }
   return result;
 };
 const updateAcaFacByIdDB = async (
@@ -85,6 +105,9 @@ const updateAcaFacByIdDB = async (
     },
     data: payload,
   });
+  if (result) {
+    RedisClinet.publish(EVENT_ACADEMIC_FACULTY_UPDATED, JSON.stringify(result));
+  }
   return result;
 };
 // Deleted AcademicFaculty
@@ -94,6 +117,12 @@ const DeletedAcaFacByIdDB = async (id: string) => {
       id,
     },
   });
+  if (result) {
+    RedisClinet.publish(
+      EVENT_ACADEMIC_FACULTY_GET_DELETED,
+      JSON.stringify(result)
+    );
+  }
   return result;
 };
 export const AcademicFacultyService = {

@@ -3,7 +3,13 @@ import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import prisma from '../../../shared/prisma';
+import { RedisClinet } from '../../../shared/redis';
 import {
+  EVENT_ACADEMIC_DEPARTMENT_CREATED,
+  EVENT_ACADEMIC_DEPARTMENT_GET_ALL,
+  EVENT_ACADEMIC_DEPARTMENT_GET_DELETED,
+  EVENT_ACADEMIC_DEPARTMENT_GET_SINGLE,
+  EVENT_ACADEMIC_DEPARTMENT_UPDATED,
   academicDepartmentRelationalFields,
   academicDepartmentRelationalFieldsMapper,
   academicDepartmentSearchableFields,
@@ -16,6 +22,12 @@ const inserAcademicDepartment = async (
   const result = await prisma.academicDepartment.create({
     data,
   });
+  if (result) {
+    RedisClinet.publish(
+      EVENT_ACADEMIC_DEPARTMENT_CREATED,
+      JSON.stringify(result)
+    );
+  }
   return result;
 };
 // get Aca.Dep All Data fecht
@@ -78,6 +90,12 @@ const getAcaDepDB = async (
   const total = await prisma.academicDepartment.count({
     where: whereConditions,
   });
+  if (result) {
+    RedisClinet.publish(
+      EVENT_ACADEMIC_DEPARTMENT_GET_ALL,
+      JSON.stringify(result)
+    );
+  }
   return {
     meta: {
       total,
@@ -97,6 +115,12 @@ const getDepByIdDB = async (id: string) => {
       id,
     },
   });
+  if (result) {
+    RedisClinet.publish(
+      EVENT_ACADEMIC_DEPARTMENT_GET_SINGLE,
+      JSON.stringify(result)
+    );
+  }
   return result;
 };
 // update department
@@ -110,6 +134,12 @@ const updateAcaDep = async (
     },
     data: payload,
   });
+  if (result) {
+    RedisClinet.publish(
+      EVENT_ACADEMIC_DEPARTMENT_UPDATED,
+      JSON.stringify(result)
+    );
+  }
   return result;
 };
 // get single AcademicSingleData
@@ -119,6 +149,12 @@ const DeletedDepByIdDB = async (id: string) => {
       id,
     },
   });
+  if (result) {
+    RedisClinet.publish(
+      EVENT_ACADEMIC_DEPARTMENT_GET_DELETED,
+      JSON.stringify(result)
+    );
+  }
   return result;
 };
 export const AcademicDepartmentService = {
