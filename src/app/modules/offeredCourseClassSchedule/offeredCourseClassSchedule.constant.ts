@@ -13,14 +13,14 @@ export const offeredCourseClassScheduleRelationalFields = [
 //   'roomId',
 //   'facultyId',
 // ];
-export const offeredCourseClassScheduleRelationalFieldsMapper: {
-  [key: string]: string;
-} = {
-  offeredCourseSectionId: 'offeredCourseSection',
-  facultyId: 'faculty',
-  roomId: 'room',
-  semesterRegistrationId: 'semesterRegistration',
-};
+// export const offeredCourseClassScheduleRelationalFieldsMapper: {
+//   [key: string]: string;
+// } = {
+//   offeredCourseSectionId: 'offeredCourseSection',
+//   facultyId: 'faculty',
+//   roomId: 'room',
+//   semesterRegistrationId: 'semesterRegistration',
+// };
 export const offeredCourseClassScheduleRelationalFieldsMapper: {
   [key: string]: string;
 } = {
