@@ -1,11 +1,12 @@
 import { Server } from 'http';
 import app from './app';
+import subscriberToEvent from './app/events';
 import config from './config';
 import { errorlogger, logger } from './shared/logger';
 import { RedisClinet } from './shared/redis';
 
 async function bootstrap() {
-  await RedisClinet.connect();
+  await RedisClinet.connect().then(() => subscriberToEvent());
   const server: Server = app.listen(config.port, () => {
     logger.info(`Server running on port ${config.port}`);
   });

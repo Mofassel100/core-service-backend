@@ -245,6 +245,23 @@ const getMyStudentAccInfo = async (authUser: string) => {
     course: groupByAcademicSemester,
   };
 };
+
+const createStudentEvent = (e: any) => {
+  const studentData: Partial<Student> = {
+    studentId: e.id,
+    firstName: e.name.firstName,
+    lastName: e.name.lastName,
+    middeName: e.name.middleName,
+    gender: e.gender,
+    email: e.email,
+    contactNo: e.contactNo,
+    bloodgroup: e.bloodGroup,
+    academicFacultyId: e.academicFaculty.syncId,
+    academicDepartmentId: e.academicDepartment.syncId,
+    academicSemesterId: e.academicSemester.syncId,
+  };
+  insertStudent(studentData as Student);
+};
 export const StudentService = {
   insertStudent,
   getAllFromDB,
@@ -254,4 +271,5 @@ export const StudentService = {
   myCourse,
   getMyCourseSchedules,
   getMyStudentAccInfo,
+  createStudentEvent,
 };

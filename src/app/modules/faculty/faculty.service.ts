@@ -265,6 +265,23 @@ const myCourse = async (
   //   },
   // });
 };
+
+const createFacultyEvent = (e: any) => {
+  const studentData: Partial<Faculty> = {
+    facultyId: e.id,
+    firstName: e.name.firstName,
+    lastName: e.name.lastName,
+    middeName: e.name.middleName,
+    gender: e.gender,
+    email: e.email,
+    designation: e.designation,
+    contactNo: e.contactNo,
+    bloodgroup: e.bloodGroup,
+    academicFacultyId: e.academicFaculty.syncId,
+    academicDepartmentId: e.academicDepartment.syncId,
+  };
+  insertFaculty(studentData as Faculty);
+};
 export const FacultyService = {
   insertFaculty,
   getAllFromDB,
@@ -274,4 +291,5 @@ export const FacultyService = {
   assignCourses,
   RemoveCourses,
   myCourse,
+  createFacultyEvent,
 };

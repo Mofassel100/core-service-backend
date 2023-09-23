@@ -35,3 +35,4 @@ export const studentRelationalFieldsMapper: { [key: string]: string } = {
 
   academicSemesterId: 'academicSemester',
 };
+export const STUDENT_CREATED_EVENT = 'student.create';
