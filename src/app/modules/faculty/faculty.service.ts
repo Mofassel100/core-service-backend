@@ -267,7 +267,7 @@ const myCourse = async (
 };
 
 const createFacultyEvent = (e: any) => {
-  const studentData: Partial<Faculty> = {
+  const facyltyDataData: Partial<Faculty> = {
     facultyId: e.id,
     firstName: e.name.firstName,
     lastName: e.name.lastName,
@@ -280,8 +280,73 @@ const createFacultyEvent = (e: any) => {
     academicFacultyId: e.academicFaculty.syncId,
     academicDepartmentId: e.academicDepartment.syncId,
   };
-  insertFaculty(studentData as Faculty);
+  insertFaculty(facyltyDataData as Faculty);
 };
+const UpdateEventFaculty = async (e: any): Promise<void> => {
+  const isExistFacultyId = await prisma.faculty.findFirst({
+    where: {
+      facultyId: e.id,
+    },
+    include: {
+      academicDepartment: true,
+      academicFaculty: true,
+    },
+  });
+  if (!isExistFacultyId) {
+    createFacultyEvent(e);
+  } else {
+    const facyltyData: Partial<Faculty> = {
+      facultyId: e.id,
+      firstName: e.name.firstName,
+      lastName: e.name.lastName,
+      middeName: e.name.middleName,
+      gender: e.gender,
+      email: e.email,
+      designation: e.designation,
+      contactNo: e.contactNo,
+      bloodgroup: e.bloodGroup,
+      academicFacultyId: e.academicFaculty.syncId,
+      academicDepartmentId: e.academicDepartment.syncId,
+    };
+    const res = await prisma.faculty.updateMany({
+      where: {
+        facultyId: e.id,
+      },
+      data: facyltyData,
+    });
+    console.log(res);
+  }
+};
+const getEventSingleData = async (e: any) => {
+  const response = await prisma.faculty.findFirst({
+    where: {
+      facultyId: e.id,
+    },
+    include: {
+      academicDepartment: true,
+      academicFaculty: true,
+    },
+  });
+  return response;
+};
+const getEventAllData = async () => {
+  const response = await prisma.faculty.findMany({
+    include: {
+      academicDepartment: true,
+      academicFaculty: true,
+    },
+  });
+  return response;
+};
+// const DeleteEventSingleDB = async (e: ayn) => {
+//   const response = await prisma.faculty.delete({
+//     where: {
+//       facultyId: e.id,
+//     },
+//   });
+//   return response;
+// };
+
 export const FacultyService = {
   insertFaculty,
   getAllFromDB,
@@ -292,4 +357,7 @@ export const FacultyService = {
   RemoveCourses,
   myCourse,
   createFacultyEvent,
+  UpdateEventFaculty,
+  getEventSingleData,
+  getEventAllData,
 };
