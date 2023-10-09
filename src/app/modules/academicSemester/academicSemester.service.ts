@@ -130,6 +130,7 @@ const UpdateAcademicSemester = async (
 const DeletedSingById = async (
   id: string
 ): Promise<AcademicSemester | null> => {
+  console.log(id);
   const result = await prisma.academicSemester.delete({
     where: {
       id,
